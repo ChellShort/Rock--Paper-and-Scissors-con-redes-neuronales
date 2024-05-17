@@ -1,9 +1,12 @@
+#el player 2 aprende como ganar al jugador 1
+
 from random import choice
 from sklearn.neural_network import MLPClassifier
 
 options = ["piedra", "tijeras", "papel"]
 
-#Generamos una funci[on con todas las combinaciones posibles
+#Generamos una funcion con todas las combinaciones posibles
+#Función para las reglas del juego y determina quien gana
 def search_winner(player1, player2):
     if player1 == player2:
         result = 0
@@ -21,38 +24,38 @@ def search_winner(player1, player2):
         result = 2
     return result
 
-resultado=search_winner("papel", "tijeras")
-print("Gana el jugador ",resultado)
+#resultado=search_winner("papel", "tijeras")
+#print("Gana el jugador ",resultado)
 
-test = [
-    ["piedra", "piedra", 0],
-    ["piedra", "tijeras", 1],
-    ["piedra", "papel", 2],
-]
+#test = [
+#    ["piedra", "piedra", 0],
+#    ["piedra", "tijeras", 1],
+#    ["piedra", "papel", 2],
+#]
 
-for partida in test:
-    print ("Player 1: %s player 2: %s Winner: %s Validation: %s"
-           % (
-                partida[0],
-                partida[1],
-                search_winner(partida[0], partida[1]),
-                partida[2])
-           )
+# for partida in test:
+#     print ("Player 1: %s player 2: %s Winner: %s Validation: %s"
+#            % (
+#                 partida[0],
+#                 partida[1],
+#                 search_winner(partida[0], partida[1]),
+#                 partida[2])
+#            )
     
-#Eleccion de player 1 de forma aleatria
+# #Eleccion de player 1 de forma aleatria
 def get_choice():
     return choice(options)
 
-for i in range(10):
-    player1 = get_choice()
-    player2 = get_choice()
-    print ("Player 1: %s Player 2: %s Winner: %s"
-           % (
-                player1,
-                player2,
-                search_winner(player1, player2)
-                )
-           )
+# for i in range(10):
+#     player1 = get_choice()
+#     player2 = get_choice()
+#     print ("Player 1: %s Player 2: %s Winner: %s"
+#            % (
+#                 player1,
+#                 player2,
+#                 search_winner(player1, player2)
+#                 )
+#            )
     
 #Inicia la red neuronal
 def str_to_listo(option):
@@ -74,7 +77,7 @@ print(data_Y)
 clf=MLPClassifier(verbose=False, warm_start=True)
 
 model = clf.fit([data_X[0]], [data_Y[0]])
-print(model)
+print("Modelo: ", model)
 
 def play_and_learn(iters=10, debug=False):
     score={"win":0, "loose":0}
@@ -128,10 +131,12 @@ while True:
     score, data_x, data_y = play_and_learn(1000, debug=False)
     pct = (score["win"]*100/(score["win"]+score["loose"]))
     historic_pct.append(pct)
+    #se imprime el porcentaje de aprendizaje
     print("Iter: %s - score: %s %s %%" % (i, score, pct))
     if len(data_x) > 0:
         model = model.partial_fit(data_x, data_y)
 
+    #Se determin cuando el programa se detiene
     if sum(historic_pct[-9:])==900:
         break;
 
